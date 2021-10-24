@@ -1,11 +1,12 @@
 using Leopotam.Ecs;
 using UnityEngine;
 
-namespace Football.Ecs
+namespace Football.ECS
 {
-    public class InitGameSystem : IEcsInitSystem
+    sealed class InitGameSystem : IEcsInitSystem
     {
-        private EcsWorld _world = null;
+        private readonly EcsWorld _world = null;
+        private EcsFilter<FootballPitchComponent> pitch = null;
 
 
         public void Init()

@@ -1,7 +1,7 @@
 using Leopotam.Ecs;
 using UnityEngine;
 
-namespace Football.Ecs
+namespace Football.ECS
 {
     public class StartGame : MonoBehaviour
     {
