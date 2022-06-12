@@ -1,5 +1,6 @@
 using Leopotam.Ecs;
 using UnityEngine;
+using Voody.UniLeo;
 
 namespace FootballECS
 {
@@ -16,7 +17,7 @@ namespace FootballECS
         private void Start()
         {
             _world = new EcsWorld();
-            _updateSystem = new EcsSystems(_world);
+            _updateSystem = new EcsSystems(_world).ConvertScene();
 
             _gameData = new GameData()
             {
