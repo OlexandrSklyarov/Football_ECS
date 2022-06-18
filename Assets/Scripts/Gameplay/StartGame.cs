@@ -1,6 +1,5 @@
 using Leopotam.Ecs;
 using UnityEngine;
-using Voody.UniLeo;
 
 namespace FootballECS
 {
@@ -10,6 +9,7 @@ namespace FootballECS
         [SerializeField] private WorldInfo _worldInfo;
 
         private EcsWorld _world;
+        private EcsSystems _initSystem;
         private EcsSystems _updateSystem;
         private GameData _gameData;
 
@@ -17,7 +17,9 @@ namespace FootballECS
         private void Start()
         {
             _world = new EcsWorld();
-            _updateSystem = new EcsSystems(_world).ConvertScene();
+
+            _initSystem = new EcsSystems(_world);
+            _updateSystem = new EcsSystems(_world);
 
             _gameData = new GameData()
             {
@@ -30,12 +32,16 @@ namespace FootballECS
             InjectServices();
             InitSystems();
         }
-
+        
 
         private void RegisterSystems()
         {
-            _updateSystem
-                .Add(new InitGameSystem());
+            _initSystem?
+                .Add(new InitGameSystem())
+                .Add(new DebugDrawPitchSystem());
+
+            // _updateSystem?
+            //     .Add();
         }
 
 
@@ -48,29 +54,36 @@ namespace FootballECS
 
         private void InjectServices()
         {
-            _updateSystem
+            _initSystem?
+                .Inject(_gameData);
+
+            _updateSystem?
                 .Inject(_gameData);
         }
 
 
         private void InitSystems()
         {
-            _updateSystem.Init();
+            _initSystem?.Init();
+            _updateSystem?.Init();
         }
 
 
         private void Update()
         {
-            _updateSystem.Run();
+            _updateSystem?.Run();
         }
 
 
         private void OnDestroy()
         {
-            _updateSystem.Destroy();
+            _initSystem?.Destroy();
+            _initSystem = null;
+
+            _updateSystem?.Destroy();
             _updateSystem = null;
 
-            _world.Destroy();
+            _world?.Destroy();
             _world = null;            
         }
     }

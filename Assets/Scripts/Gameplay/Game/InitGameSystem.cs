@@ -19,30 +19,32 @@ namespace FootballECS
             var pitchEntity = _world.NewEntity();
 
             ref var pitch = ref pitchEntity.Get<FootballPitch>();
+
             pitch.RedTeamStartPositions = _gameData.WorldInfo.RedTeamStartPositions;
             pitch.BlueTeamStartPositions = _gameData.WorldInfo.BlueTeamStartPositions;
-                
-            CreateTeam("Red", pitch.RedTeamStartPositions.Select(tr => tr.position), 
-                _gameData.Config.PlayerSettings.RedTeamColor);
 
-            CreateTeam("Blue", pitch.BlueTeamStartPositions.Select(tr => tr.position), 
-                _gameData.Config.PlayerSettings.BlueTeamColor);
-            
+            var playersRoot = new GameObject("[Players]").transform;
+                
+            CreateTeam(TeamType.RED, pitch.RedTeamStartPositions.Select(tr => tr.position), 
+                _gameData.Config.PlayerSettings.RedTeamColor, playersRoot);
+
+            CreateTeam(TeamType.BLUE, pitch.BlueTeamStartPositions.Select(tr => tr.position), 
+                _gameData.Config.PlayerSettings.BlueTeamColor, playersRoot);            
         }
 
 
-        private void CreateTeam(string teamName, IEnumerable<Vector3> positions, Color teamColor)
+        private void CreateTeam(TeamType type, IEnumerable<Vector3> positions, Color teamColor, Transform root)
         {
-            var teamEntity = _world.NewEntity();
+            ref var team = ref _world.NewEntity().Get<SoccerTeam>();
 
-            ref var team = ref teamEntity.Get<SoccerTeam>();
-            team.Name = teamName;
+            team.Name = type.ToString();
+            team.Type = type;
+            team.Players = new List<EcsEntity>();
 
             foreach (var position in positions)
             {
                 var playerEntity = _world.NewEntity();
-
-                var playerGO = CreatePlayer(position);
+                var playerGO = CreatePlayer(position, root);
 
                 ref var location = ref playerEntity.Get<Location>();
                 location.MyTransform = playerGO.transform;
@@ -50,17 +52,20 @@ namespace FootballECS
                 ref var view = ref playerEntity.Get<PlayerView>();
                 view.BodyRenderers = playerGO.GetComponent<PlayerProvider>().BodyRenderers;
                 Array.ForEach(view.BodyRenderers, r => r.material.color = teamColor);
+
+                team.Players.Add(playerEntity);
             }
         }
 
 
-        private GameObject CreatePlayer(Vector3 position)
+        private GameObject CreatePlayer(Vector3 position, Transform root)
         {
             return UnityEngine.Object.Instantiate
             (
                 _gameData.Config.PlayerSettings.Prefab,
                 position,
-                Quaternion.identity
+                Quaternion.identity,
+                root
             );
         }
     }
