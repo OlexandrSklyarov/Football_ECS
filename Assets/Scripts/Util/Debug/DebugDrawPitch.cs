@@ -18,7 +18,8 @@ public class DebugDrawPitch : MonoBehaviour
     private bool _isInit;
     
 
-    public void Init(
+    public void Init(Vector2 size)
+    {
         var height = 0.025f;
 
         _points = new PitchPoints()
