@@ -16,3 +16,5 @@ MonoBehaviour:
     <Prefab>k__BackingField: {fileID: 895259042405761649, guid: cb694e9f05dfb2350bcc090d1b00caff, type: 3}
     <RedTeamColor>k__BackingField: {r: 1, g: 0, b: 0, a: 1}
     <BlueTeamColor>k__BackingField: {r: 0, g: 0, b: 1, a: 1}
+  <PitchSettings>k__BackingField:
+    <Size>k__BackingField: {x: 120, y: 60}
