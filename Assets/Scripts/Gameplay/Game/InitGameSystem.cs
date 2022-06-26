@@ -25,11 +25,21 @@ namespace FootballECS
 
             var playersRoot = new GameObject("[Players]").transform;
                 
-            CreateTeam(TeamType.RED, pitch.RedTeamStartPositions.Select(tr => tr.position), 
-                _gameData.Config.PlayerSettings.RedTeamColor, playersRoot);
+            CreateTeam
+            (
+                TeamType.RED, 
+                pitch.RedTeamStartPositions.Select(tr => tr.position), 
+                _gameData.Config.PlayerSettings.RedTeamColor, 
+                playersRoot
+            );
 
-            CreateTeam(TeamType.BLUE, pitch.BlueTeamStartPositions.Select(tr => tr.position), 
-                _gameData.Config.PlayerSettings.BlueTeamColor, playersRoot);            
+            CreateTeam
+            (
+                TeamType.BLUE, 
+                pitch.BlueTeamStartPositions.Select(tr => tr.position), 
+                _gameData.Config.PlayerSettings.BlueTeamColor, 
+                playersRoot
+            );            
         }
 
 
