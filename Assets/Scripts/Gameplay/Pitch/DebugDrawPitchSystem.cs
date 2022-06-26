@@ -10,7 +10,9 @@ namespace FootballECS
 
         public void Init()
         {
-            var drower = new GameObject("[PitchDrawer]").AddComponent<DebugDrawPitch>();
+            var drower = new GameObject("[PitchDrawer]")
+                .AddComponent<DebugDrawPitch>();
+                
             drower.Init(_gameData.Config.PitchSettings.Size);
         }
     }

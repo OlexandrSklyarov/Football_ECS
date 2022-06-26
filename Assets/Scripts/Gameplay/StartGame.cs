@@ -6,11 +6,12 @@ namespace FootballECS
     public class StartGame : MonoBehaviour
     {
         [SerializeField] private GameConfig ConfigSO;
-        [SerializeField] private WorldInfo _worldInfo;
+        [Space(10f), SerializeField] private WorldInfo _worldInfo;
 
         private EcsWorld _world;
         private EcsSystems _initSystem;
         private EcsSystems _updateSystem;
+        private EcsSystems _fixedUpdateSystem;
         private GameData _gameData;
 
 
@@ -20,11 +21,13 @@ namespace FootballECS
 
             _initSystem = new EcsSystems(_world);
             _updateSystem = new EcsSystems(_world);
+            _fixedUpdateSystem = new EcsSystems(_world);
 
             _gameData = new GameData()
             {
                 Config = ConfigSO,
-                WorldInfo = _worldInfo
+                WorldInfo = _worldInfo,
+                RuntimeData = new RuntimeData()
             };
 
             RegisterSystems();
@@ -41,6 +44,9 @@ namespace FootballECS
                 .Add(new DebugDrawPitchSystem());
 
             // _updateSystem?
+            //     .Add();
+
+            // _fixedUpdateSystem?
             //     .Add();
         }
 
@@ -59,6 +65,9 @@ namespace FootballECS
 
             _updateSystem?
                 .Inject(_gameData);
+
+            _fixedUpdateSystem?
+                .Inject(_gameData);
         }
 
 
@@ -66,13 +75,14 @@ namespace FootballECS
         {
             _initSystem?.Init();
             _updateSystem?.Init();
+            _fixedUpdateSystem?.Init();
         }
 
 
-        private void Update()
-        {
-            _updateSystem?.Run();
-        }
+        private void Update() => _updateSystem?.Run();
+
+
+        private void FixedUpdate() => _fixedUpdateSystem?.Run();
 
 
         private void OnDestroy()
@@ -82,6 +92,9 @@ namespace FootballECS
 
             _updateSystem?.Destroy();
             _updateSystem = null;
+
+            _fixedUpdateSystem?.Destroy();
+            _fixedUpdateSystem = null;
 
             _world?.Destroy();
             _world = null;            

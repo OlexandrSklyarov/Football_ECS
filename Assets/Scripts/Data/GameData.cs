@@ -4,5 +4,6 @@ namespace FootballECS
     {
         public GameConfig Config;
         public WorldInfo WorldInfo;
+        public RuntimeData RuntimeData;
     }   
 }
